@@ -451,9 +451,21 @@ var (
 	nau7802 = &NAU7802{}
 )
 
+func InitializeWithConnection(dev *i2c.Device) (*NAU7802, error) {
+	return initializeHelper(&NAU7802{Dev: dev})
+}
+
 func Initialize() (*NAU7802, error) {
 	nau7802, err := NewNAU7802()
+	if err != nil {
+		return nau7802, err
+	}
+	return initializeHelper(nau7802)
+}
 
+func initializeHelper(nau7802 *NAU7802) (*NAU7802, error) {
+	var err error
+	
 	nau7802.zeroOffset = 0
 	nau7802.calibrationFactor = 1.0
 
